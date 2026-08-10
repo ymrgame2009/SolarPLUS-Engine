@@ -1,7 +1,8 @@
 # Solar+ Engine
 Its a Solar Engine Fork
 
-- Note Splash Debug is now supported 
+- Note Splash Debug is now supported
+- Add New MusicPlayer in FreePlay
 - Fix Note Splash Order with out my script
 - Add new option: Note Splash Opacity
 - Remove option: Note Splashes *DON'T ASK*
