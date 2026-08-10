@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="bfshitresult.png">
+	<!-- Created with Adobe Animate version 22.0.5.191 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="rankLoop0000" x="0" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0001" x="0" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0002" x="639" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0003" x="639" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0004" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0005" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0006" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0007" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0008" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0009" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0010" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0011" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0012" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0013" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0014" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0015" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0016" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0017" x="2556" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0018" x="2556" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0019" x="3195" y="0" width="639" height="639" frameX="-57" frameY="-6" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0020" x="3195" y="0" width="639" height="639" frameX="-57" frameY="-6" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0021" x="0" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0022" x="0" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0023" x="639" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0024" x="639" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0025" x="639" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0026" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0027" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0028" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0029" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0030" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0031" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0032" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0033" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0034" x="1917" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0035" x="1917" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0036" x="1917" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0037" x="2556" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0038" x="2556" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0039" x="3195" y="643" width="639" height="637" frameX="-57" frameY="-8" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0040" x="3195" y="643" width="639" height="637" frameX="-57" frameY="-8" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0041" x="0" y="1284" width="639" height="639" frameX="-57" frameY="-6" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0042" x="0" y="1284" width="639" height="639" frameX="-57" frameY="-6" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0043" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0044" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0045" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0046" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0047" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0048" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0049" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0050" x="1974" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0051" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0052" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0053" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0054" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0055" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0056" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0057" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0058" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0059" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0060" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0061" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0062" x="1974" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0063" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0064" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0065" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0066" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0067" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0068" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0069" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0070" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0071" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0072" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0073" x="1278" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0074" x="1974" y="1284" width="696" height="645"/>
+	<SubTexture name="rankLoop0075" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0076" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0077" x="639" y="1284" width="639" height="645" frameX="-57" frameY="0" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0078" x="2670" y="1284" width="639" height="644" frameX="-57" frameY="-1" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0079" x="2670" y="1284" width="639" height="644" frameX="-57" frameY="-1" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0080" x="3309" y="1284" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0081" x="3309" y="1284" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0082" x="0" y="1929" width="639" height="637" frameX="-57" frameY="-8" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0083" x="0" y="1929" width="639" height="637" frameX="-57" frameY="-8" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0084" x="0" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0085" x="0" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0086" x="639" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0087" x="639" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0088" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0089" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0090" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0091" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0092" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0093" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0094" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0095" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0096" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0097" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0098" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0099" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0100" x="639" y="1929" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0101" x="1278" y="1929" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0102" x="1278" y="1929" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0103" x="1917" y="1929" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0104" x="2556" y="1929" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0105" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0106" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0107" x="1278" y="1929" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0108" x="2556" y="1929" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0109" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0110" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0111" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0112" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0113" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0114" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0115" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0116" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0117" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0118" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0119" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0120" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0121" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0122" x="1917" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0123" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0124" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0125" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0126" x="2556" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0127" x="2556" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0128" x="3195" y="0" width="639" height="639" frameX="-57" frameY="-6" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0129" x="3195" y="0" width="639" height="639" frameX="-57" frameY="-6" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0130" x="0" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0131" x="0" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0132" x="639" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0133" x="639" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0134" x="639" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0135" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0136" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0137" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0138" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0139" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0140" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0141" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0142" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0143" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0144" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0145" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0146" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0147" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0148" x="3195" y="1929" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0149" x="3195" y="1929" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0150" x="0" y="2572" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0151" x="0" y="2572" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0152" x="639" y="2572" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0153" x="1278" y="2572" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0154" x="1278" y="2572" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0155" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0156" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0157" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0158" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0159" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0160" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0161" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0162" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0163" x="1278" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0164" x="1917" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0165" x="1917" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0166" x="1917" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0167" x="2556" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0168" x="2556" y="643" width="639" height="641" frameX="-57" frameY="-4" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0169" x="3195" y="643" width="639" height="637" frameX="-57" frameY="-8" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0170" x="3195" y="643" width="639" height="637" frameX="-57" frameY="-8" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0171" x="3195" y="0" width="639" height="639" frameX="-57" frameY="-6" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0172" x="2556" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0173" x="2556" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0174" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0175" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+	<SubTexture name="rankLoop0176" x="1278" y="0" width="639" height="643" frameX="-57" frameY="-2" frameWidth="696" frameHeight="645"/>
+</TextureAtlas>
