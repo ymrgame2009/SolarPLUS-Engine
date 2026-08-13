@@ -1,7 +1,14 @@
 # Solar+ Engine
 Its a Solar Engine Fork
 
-## V0.0.1:
+# V0.0.2
+
+- Hold Cover Debug is now supported
+- Add new `holdCoverInputText` in Chart Editor *Default : `holdCover/holdCover`*
+- Add Jack Amount in Gameplay Changers
+- Fix Version 0.6.1 to 0.0.2 *uhh idk why im forget about that Xd*
+
+# V0.0.1:
 - Note Splash Debug is now supported
 - Add New MusicPlayer in FreePlay
 - Fix Note Splash Order with out my script
