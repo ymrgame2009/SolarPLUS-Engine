@@ -125,6 +125,7 @@ class ClientPrefs
 		'sd' => false,
 		'hd' => false, // ermm,,,
 		'sn' => false, // this is shitty
+		'jacks' => 0,
 		'hdp2' => false,
 		'ipbr' => false, //
 		'ipbrv' => "Normal"

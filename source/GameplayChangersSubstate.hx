@@ -127,6 +127,16 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.onChange = onChangeChartOption;
 		optionsArray.push(option);
 
+		var option:GameplayOption = new GameplayOption('Jack Amount: ', 'jacks', 'int', 0);
+		option.onChange = onChangeChartOption;
+		option.scrollSpeed = 6;
+		option.minValue = 0;
+		option.maxValue = 100;
+		option.changeValue = 1;
+		//option.slowChangeVal = 1;
+		option.displayFormat = '%v';
+		optionsArray.push(option);
+
 		var option:GameplayOption = new GameplayOption('Increase HlthDrn on miss', 'hdp2', 'bool', false);
 		option.onChange = onChangeChartOption;
 		optionsArray.push(option);

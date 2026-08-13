@@ -55,7 +55,7 @@ class UEGameOptions extends BaseOptionsMenu
 		var option:Option = new Option('Fancy Title', 'Title bounce', 'ft', 'bool', false);
 		addOption(option);
 
-		var option:Option = new Option('Cute Mode', if (ClientPrefs.cm == true)
+		var option:Option = new Option('Cute Mode', if (ClientPrefs.cm == true) // bro WTF is this :sob: "Mr YMR"
 		{
 			'i coded this UwU';
 		} else

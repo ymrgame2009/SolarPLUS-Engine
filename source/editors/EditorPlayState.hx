@@ -409,9 +409,7 @@ class EditorPlayState extends MusicBeatState
                     {
                         if (!daNote.isSustainNote && daNote.sustainLength > 0)
                         {
-                            var splash:SustainSplash = grpHoldSplashes.recycle(SustainSplash);
-                            splash.setupSusSplash(opponentStrums.members[daNote.noteData], daNote);
-                            grpHoldSplashes.add(splash);
+                            spawnHoldSplash(opponentStrums.members[daNote.noteData], daNote, 'hold');
                         }
                     }
 
@@ -576,7 +574,7 @@ class EditorPlayState extends MusicBeatState
                         onKeyPress(new KeyboardEvent(KeyboardEvent.KEY_DOWN, true, true, -1, keysArray[i][0]));
                 }
             }
-		}
+                }
 
         if (generatedMusic)
         {
@@ -633,9 +631,7 @@ class EditorPlayState extends MusicBeatState
                 
                 if (ClientPrefs.noteSplashes && note.sustainLength > 0 && !note.noteSplashData.disabled)
                 {
-                    var splash:SustainSplash = grpHoldSplashes.recycle(SustainSplash);
-                    splash.setupSusSplash(playerStrums.members[note.noteData], note);
-                    grpHoldSplashes.add(splash);
+                    spawnHoldSplash(playerStrums.members[note.noteData], note, 'hold');
                 }
 
                 if (combo > 9999) combo = 9999;
@@ -798,7 +794,7 @@ class EditorPlayState extends MusicBeatState
             spr.playAnim('confirm', true);
             spr.resetAnim = time;
         }
-	}
+        }
 
     function spawnNoteSplashOnNote(note:Note)
     {
@@ -816,6 +812,26 @@ class EditorPlayState extends MusicBeatState
         var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
         splash.setupNoteSplash(x, y, data, note, skin);
         grpNoteSplashes.add(splash);
+    }
+
+    function spawnHoldSplash(strum:StrumNote, daNote:Note, animMode:String = 'hold'):Void
+    {
+        if (strum == null || daNote == null) return;
+
+        var skin:String = SustainSplash.defaultNoteHoldSplash;
+        if (PlayState.SONG.holdCoverSkin != null && PlayState.SONG.holdCoverSkin.length > 0)
+            skin = PlayState.SONG.holdCoverSkin;
+
+        var splash:SustainSplash = grpHoldSplashes.recycle(SustainSplash);
+        if (splash._textureLoaded != skin)
+        {
+            splash._textureLoaded = skin;
+            splash._configLoaded = skin;
+            splash.frames = Paths.getSparrowAtlas(skin);
+            splash.reloadFrames();
+        }
+        splash.setupSusSplash(strum, daNote, animMode);
+        grpHoldSplashes.add(splash);
     }
 
     override function destroy()
