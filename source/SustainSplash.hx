@@ -2,7 +2,6 @@ package;
 
 import flixel.FlxSprite;
 import flixel.math.FlxRect;
-import flixel.util.FlxTimer;
 import shaders.RGBPalette;
 
 using StringTools;
@@ -26,7 +25,9 @@ class SustainSplash extends FlxSprite
     public var strumNote:StrumNote;
     public var parentNote:Note;
 
-    var timer:FlxTimer;
+    var endTime:Float = -1;
+    var playbackRate:Float = 1;
+    var hasEnded:Bool = false;
     public var _configLoaded:String = null;
     public var _textureLoaded:String = null;
     // Default skin for the hold splash
@@ -42,6 +43,7 @@ class SustainSplash extends FlxSprite
         var skin:String = defaultNoteHoldSplash + getSplashSkinPostfix();
         precacheConfig(skin);
         _configLoaded = skin;
+        _textureLoaded = skin;
         reloadFrames();
         scrollFactor.set();
     }
@@ -149,7 +151,7 @@ class SustainSplash extends FlxSprite
         {
             setPosition(strumNote.x, strumNote.y);
             visible = strumNote.visible;
-            
+
             // Adjust alpha based on strumNote's alpha and ClientPrefs holdSplashAlpha
             var baseAlpha:Float = Reflect.hasField(ClientPrefs, 'holdSplashAlpha') ? Reflect.field(ClientPrefs, 'holdSplashAlpha') : 1;
             alpha = baseAlpha - (1 - strumNote.alpha);
@@ -157,6 +159,33 @@ class SustainSplash extends FlxSprite
             if (!strumNote.alive || (parentNote != null && (parentNote.wasGoodHit && parentNote.sustainLength <= 0)))
             {
                 kill();
+                return;
+            }
+
+            // Check if hold cover should end (based on song position, pauses safely)
+            if (endTime >= 0 && !hasEnded && Conductor.songPosition >= endTime)
+            {
+                hasEnded = true;
+                if (parentNote != null && parentNote.mustPress && animation.getByName('end') != null)
+                {
+                    animation.play('end', true, false, 0);
+                    if (animation.curAnim != null)
+                    {
+                        animation.curAnim.looped = false;
+                        animation.curAnim.frameRate = 24;
+                    }
+                    clipRect = null;
+                    animation.finishCallback = function(animName:String)
+                    {
+                        x = -50000;
+                        kill();
+                    };
+                }
+                else
+                {
+                    x = -50000;
+                    kill();
+                }
             }
         }
     }
@@ -188,8 +217,9 @@ class SustainSplash extends FlxSprite
             antialiasing = false;
 
         var rate:Float = Std.isOfType(playbackRate, Float) ? playbackRate : (Std.isOfType(playbackRate, Int) ? playbackRate : 1.0);
-        var remainingTime:Float = daNote.sustainLength - (Conductor.songPosition - daNote.strumTime);
-        var timeThingy:Float = (remainingTime > 0 ? remainingTime : 0.1) / (rate > 0 ? rate : 1) / 1000;
+        playbackRate = rate;
+        hasEnded = false;
+        endTime = daNote.strumTime + daNote.sustainLength;
 
         var config:HoldCoverConfig = precacheConfig(_configLoaded);
         var holdFps:Int = (config != null && config.holdFps > 0) ? config.holdFps : 24;
@@ -243,36 +273,8 @@ class SustainSplash extends FlxSprite
                 rgbShader.copyValues(tempShader);
         }
 
-        if (timer != null)
-            timer.cancel();
-
         offset.set(offArr[0], offArr[1]);
         setPosition(strumNote.x, strumNote.y);
-
-        timer = new FlxTimer().start(timeThingy, function(tmr:FlxTimer)
-        {
-            if (daNote.mustPress && animation.getByName('end') != null)
-            {
-                var endFps:Int = (config != null && config.endFps > 0) ? config.endFps : 24;
-                animation.play('end', true, false, 0);
-                if (animation.curAnim != null)
-                {
-                    animation.curAnim.looped = false;
-                    animation.curAnim.frameRate = endFps;
-                }
-                clipRect = null;
-                animation.finishCallback = function(animName:String)
-                {
-                    x = -50000;
-                    kill();
-                };
-            }
-            else
-            {
-                x = -50000;
-                kill();
-            }
-        });
     }
 
     public static function getSplashSkinPostfix():String
