@@ -43,6 +43,7 @@ true <--- Allow Pixel
 - Change UI Style in Note Splash Debug & Hold Cover Debug
 <img width="1837" height="1032" alt="Note Splash Debug" src="https://github.com/user-attachments/assets/b6420d3f-beb8-409d-aa99-22412d0d3454" />
 <img width="1832" height="1030" alt="Hold Cover Debug" src="https://github.com/user-attachments/assets/48c44e0e-a5d1-4114-9858-6caa66044863" />
+
 - Add Note Color Style ['Normal', 'Quant-Based', 'Grayscale'] *Default : Normal*
 
 # V0.0.2 HOTFIX:
