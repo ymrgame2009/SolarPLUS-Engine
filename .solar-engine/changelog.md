@@ -5,6 +5,7 @@
 - Add 2 checkboxes to the Note Splash Debug & Hold Cover Debug to Allow RGB or Pixel.
 - Add a SCALE 🗣🔥 to the Note Splash Debug & Hold Cover Debug 
 *examples:*
+
 1- noteSplashes.txt:
 ```txt
 note splash
