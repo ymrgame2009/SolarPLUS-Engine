@@ -1,6 +1,47 @@
 ## Changes: 
 
-# V0.0.2 HOTFIX
+# V0.0.3:
+
+- Add 2 checkboxes to the Note Splash Debug & Hold Cover Debug to Allow RGB or Pixel.
+- Add a SCALE 🗣🔥 to the Note Splash Debug & Hold Cover Debug 
+*examples:*
+1- noteSplashes.txt:
+```txt
+note splash
+22 26
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+0 0
+1 <--- Scale
+true <--- Allow RGB
+true <--- Allow Pixel
+```
+2- holdCover.txt
+```txt
+hold
+end
+24 24
+110 100
+110 100
+110 100
+110 100
+110 100
+110 100
+110 100
+110 100
+1 <--- Scale
+true <--- Allow RGB
+true <--- Allow Pixel
+```
+- Change UI Style in Note Splash Debug & Hold Cover Debug
+- Add Note Color Style ['Normal', 'Quant-Based', 'Grayscale'] *Default : Normal*
+
+# V0.0.2 HOTFIX:
 
 - Fix Hold Cover disappears and doesn't come back until the next note in Paused the game
 
