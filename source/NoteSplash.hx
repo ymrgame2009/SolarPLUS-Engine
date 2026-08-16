@@ -11,7 +11,10 @@ typedef NoteSplashConfig = {
     anim:String,
     minFps:Int,
     maxFps:Int,
-    offsets:Array<Array<Float>>
+    offsets:Array<Array<Float>>,
+    ?scale:Float,
+    ?allowRGB:Bool,
+    ?allowPixel:Bool
 }
 
 class NoteSplash extends FlxSprite
@@ -36,7 +39,6 @@ class NoteSplash extends FlxSprite
         precacheConfig(skin);
         _configLoaded = skin;
         scrollFactor.set();
-        //setupNoteSplash(x, y, 0);
     }
 
     override function destroy()
@@ -61,13 +63,22 @@ class NoteSplash extends FlxSprite
         else
             config = precacheConfig(_configLoaded);
 
-        var tempShader:RGBPalette = null;
-        if((note == null || note.noteSplashData.useRGBShader) && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB))
+        // Read allowRGB / allowPixel / scale from config (default true / 1.0 if missing)
+        var allowRGB:Bool = true;
+        var allowPixel:Bool = true;
+        var useScale:Float = 1.0;
+        if(config != null)
         {
-            // If Note RGB is enabled:
+            if(config.allowRGB != null) allowRGB = config.allowRGB;
+            if(config.allowPixel != null) allowPixel = config.allowPixel;
+            if(config.scale != null && config.scale > 0) useScale = config.scale;
+        }
+
+        var tempShader:RGBPalette = null;
+        if(allowRGB && (note == null || note.noteSplashData.useRGBShader) && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB))
+        {
             if(note != null && !note.noteSplashData.useGlobalShader)
             {
-                
                 if(note.noteSplashData.r != -1) note.rgbShader.r = note.noteSplashData.r;
                 if(note.noteSplashData.g != -1) note.rgbShader.g = note.noteSplashData.g;
                 if(note.noteSplashData.b != -1) note.rgbShader.b = note.noteSplashData.b;
@@ -80,21 +91,31 @@ class NoteSplash extends FlxSprite
         if(note != null) alpha = note.noteSplashData.a;
         rgbShader.copyValues(tempShader);
 
+        // Apply pixel blocksize based on allowPixel and pixel stage
+        var pixel:Float = 1;
+        if(PlayState.isPixelStage && allowPixel) pixel = PlayState.daPixelZoom;
+        rgbShader.shader.uBlocksize.value = [pixel, pixel];
+
         if(note != null) antialiasing = note.noteSplashData.antialiasing;
         if(PlayState.isPixelStage || !ClientPrefs.globalAntialiasing) antialiasing = false;
 
         _textureLoaded = texture;
-        offset.set(10, 10);
 
         var animNum:Int = FlxG.random.int(1, maxAnims);
         animation.play('note' + direction + '-' + animNum, true);
         
+        // Apply scale FIRST, then set offset (updateHitbox resets offset)
+        scale.set(useScale, useScale);
+        updateHitbox();
+
+        // Keep the old working offset base (10, 10), then add config offsets
+        offset.set(10, 10);
+
         var minFps:Int = 22;
         var maxFps:Int = 26;
         if(config != null)
         {
             var animID:Int = direction + ((animNum - 1) * Note.colArray.length);
-            //trace('anim: ${animation.curAnim.name}, $animID');
             var offs:Array<Float> = config.offsets[FlxMath.wrap(animID, 0, config.offsets.length-1)];
             offset.x += offs[0];
             offset.y += offs[1];
@@ -129,7 +150,7 @@ class NoteSplash extends FlxSprite
         {
             skin = defaultNoteSplash + getSplashSkinPostfix();
             frames = Paths.getSparrowAtlas(skin);
-            if(frames == null) //if you really need this, you really fucked something up
+            if(frames == null)
             {
                 skin = defaultNoteSplash;
                 frames = Paths.getSparrowAtlas(skin);
@@ -145,12 +166,10 @@ class NoteSplash extends FlxSprite
             var animID:Int = maxAnims + 1;
             for (i in 0...Note.colArray.length) {
                 if (!addAnimAndCheck('note$i-$animID', '$animName ${Note.colArray[i]} $animID', 24, false)) {
-                    //trace('maxAnims: $maxAnims');
                     return config;
                 }
             }
             maxAnims++;
-            //trace('currently: $maxAnims');
         }
     }
 
@@ -195,18 +214,55 @@ class NoteSplash extends FlxSprite
         if(configFile.length < 1) return null;
         
         var framerates:Array<String> = configFile[1].split(' ');
-        var offs:Array<Array<Float>> = [];
+
+        // Collect all non-empty lines after the FPS line.
+        var remaining:Array<String> = [];
         for (i in 2...configFile.length)
         {
-            var animOffs:Array<String> = configFile[i].split(' ');
-            offs.push([Std.parseFloat(animOffs[0]), Std.parseFloat(animOffs[1])]);
+            var line:String = StringTools.trim(configFile[i]);
+            if(line.length > 0) remaining.push(line);
+        }
+
+        var offs:Array<Array<Float>> = [];
+        var scale:Float = 1.0;
+        var allowRGB:Bool = true;
+        var allowPixel:Bool = true;
+
+        // Detect extended config: last 3 lines = (single number, bool, bool)
+        var n:Int = remaining.length;
+        var hasExtended:Bool = (n >= 3
+            && isSingleNumber(remaining[n-3])
+            && isBoolToken(remaining[n-2])
+            && isBoolToken(remaining[n-1]));
+
+        var offsetLines:Int = hasExtended ? n - 3 : n;
+        for (i in 0...offsetLines)
+        {
+            var animOffs:Array<String> = remaining[i].split(' ');
+            if(animOffs.length >= 2) {
+                var ox:Float = Std.parseFloat(StringTools.trim(animOffs[0]));
+                var oy:Float = Std.parseFloat(StringTools.trim(animOffs[1]));
+                if(!Math.isNaN(ox) && !Math.isNaN(oy))
+                    offs.push([ox, oy]);
+            }
+        }
+
+        if(hasExtended)
+        {
+            var parsedScale:Float = Std.parseFloat(StringTools.trim(remaining[n-3]));
+            if(!Math.isNaN(parsedScale) && parsedScale > 0) scale = parsedScale;
+            allowRGB = parseBool(remaining[n-2]);
+            allowPixel = parseBool(remaining[n-1]);
         }
 
         var config:NoteSplashConfig = {
             anim: configFile[0],
             minFps: Std.parseInt(framerates[0]),
             maxFps: Std.parseInt(framerates[1]),
-            offsets: offs
+            offsets: offs,
+            scale: scale,
+            allowRGB: allowRGB,
+            allowPixel: allowPixel
         };
         configs.set(skin, config);
         return config;
@@ -216,7 +272,7 @@ class NoteSplash extends FlxSprite
     {
         var animFrames = [];
         @:privateAccess
-        animation.findByPrefix(animFrames, anim); // adds valid frames to animFrames
+        animation.findByPrefix(animFrames, anim);
 
         if(animFrames.length < 1) return false;
     
@@ -225,13 +281,38 @@ class NoteSplash extends FlxSprite
     }
 
     static var aliveTime:Float = 0;
-    static var buggedKillTime:Float = 0.5; //automatically kills note splashes if they break to prevent it from flooding your HUD
+    static var buggedKillTime:Float = 0.5;
     override function update(elapsed:Float) {
         aliveTime += elapsed;
         if((animation.curAnim != null && animation.curAnim.finished) ||
             (animation.curAnim == null && aliveTime >= buggedKillTime)) kill();
 
         super.update(elapsed);
+    }
+
+    // ----- Helpers for extended config parsing -----
+
+    static function isBoolToken(s:String):Bool
+    {
+        var v:String = StringTools.trim(s).toLowerCase();
+        return v == 'true' || v == 'false';
+    }
+
+    static function parseBool(s:String):Bool
+    {
+        var v:String = StringTools.trim(s).toLowerCase();
+        return v == 'true' || v == '1';
+    }
+
+    static function isSingleNumber(s:String):Bool
+    {
+        var v:String = StringTools.trim(s);
+        if(v.length == 0) return false;
+        if(v.indexOf(' ') >= 0) return false;
+        var lv:String = v.toLowerCase();
+        if(lv == 'true' || lv == 'false') return false;
+        var f:Float = Std.parseFloat(v);
+        return !Math.isNaN(f);
     }
 }
 
@@ -267,7 +348,6 @@ class PixelSplashShaderRef {
         var pixel:Float = 1;
         if(PlayState.isPixelStage) pixel = PlayState.daPixelZoom;
         shader.uBlocksize.value = [pixel, pixel];
-        //trace('Created shader ' + Conductor.songPosition);
     }
 }
 

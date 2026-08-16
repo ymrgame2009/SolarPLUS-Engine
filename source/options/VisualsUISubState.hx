@@ -65,6 +65,21 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.decimals = 1;
 		addOption(option);
 
+		var option:Option = new Option('Long note Transparency', 'How much the transparency for the long notes be.', 'longnotet', 'percent', 0.6);
+		addOption(option);
+		option.maxValue = 1;
+		option.changeValue = 0.1;
+		option.decimals = 1;
+		option.scrollSpeed = 1.6;
+
+		var option:Option = new Option('Note Color Style: ', // Nice ny boi "Mr YMR"
+			"How would you like your notes colored?",
+			'noteColorStyle',
+			'string',
+			'Normal',
+			['Normal', 'Quant-Based', /*'Char-Based',*/ 'Grayscale'/* ,'Rainbow'*/]);
+		addOption(option);
+
 		var option:Option = new Option('Hide HUD',
 			'If checked, hides most HUD elements.',
 			'hideHud',
@@ -302,13 +317,6 @@ class VisualsUISubState extends BaseOptionsMenu
 		var option:Option = new Option('Darken CamGame', 'If checked, it darkens the camGame, so its easier to read modcharts.', 'dcm', 'bool', false);
 		addOption(option);
 		#end
-
-		var option:Option = new Option('Long note Transparency', 'How much the transparency for the long notes be.', 'longnotet', 'percent', 0.6);
-		addOption(option);
-		option.maxValue = 1;
-		option.changeValue = 0.1;
-		option.decimals = 1;
-		option.scrollSpeed = 1.6;
 
 		var option:Option = new Option('Results Screen', 'If unchecked, the results screen wont appear on end song.', 'ueresultscreen', 'bool', true);
 		addOption(option);

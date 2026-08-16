@@ -8,3 +8,6 @@ note splash
 0 0
 0 0
 0 0
+1
+true
+true

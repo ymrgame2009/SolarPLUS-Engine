@@ -3618,7 +3618,7 @@ class PlayState extends MusicBeatState
                             {
                             time += 0.15;
                             }
-                        StrumPlayAnim(true, Std.int(Math.abs(daNote.noteData)) % 4, time);
+                        StrumPlayAnim(true, Std.int(Math.abs(daNote.noteData)) % 4, time, daNote);
                         daNote.hitByOpponent = true;
 
 
@@ -5256,7 +5256,7 @@ class PlayState extends MusicBeatState
                 {
                         time += 0.15;
                 }
-                StrumPlayAnim(true, Std.int(Math.abs(note.noteData)), time);
+                StrumPlayAnim(true, Std.int(Math.abs(note.noteData)), time, note);
                 note.hitByOpponent = true;
 
                 callOnLuas('opponentNoteHit', [
@@ -5376,14 +5376,18 @@ class PlayState extends MusicBeatState
                                 {
                                         time += 0.15;
                                 }
-                                StrumPlayAnim(false, Std.int(Math.abs(note.noteData)), time);
+                                StrumPlayAnim(false, Std.int(Math.abs(note.noteData)), time, note);
                         }
                         else
                         {
                                 var spr = playerStrums.members[note.noteData];
                                 if (spr != null)
                                 {
-                                        spr.playAnim('confirm', true);
+                                        var style:String = ClientPrefs.noteColorStyle;
+                                        if ((style == 'Quant-Based' || style == 'Rainbow' || style == 'Grayscale') && note.rgbShader != null)
+                                                spr.playAnim('confirm', true, note.rgbShader.r, note.rgbShader.g, note.rgbShader.b);
+                                        else
+                                                spr.playAnim('confirm', true);
                                 }
                         }
                         note.wasGoodHit = true;
@@ -5886,7 +5890,7 @@ class PlayState extends MusicBeatState
                 #end
         }
 
-        function StrumPlayAnim(isDad:Bool, id:Int, time:Float)
+        function StrumPlayAnim(isDad:Bool, id:Int, time:Float, ?note:Note = null)
         {
                 var spr:StrumNote = null;
                 if (isDad)
@@ -5900,7 +5904,16 @@ class PlayState extends MusicBeatState
 
                 if (spr != null)
                 {
-                        spr.playAnim('confirm', true);
+                        var style:String = ClientPrefs.noteColorStyle;
+                        // In dynamic color modes, pass the note's color to the strum
+                        if ((style == 'Quant-Based' || style == 'Rainbow' || style == 'Grayscale') && note != null && note.rgbShader != null)
+                        {
+                                spr.playAnim('confirm', true, note.rgbShader.r, note.rgbShader.g, note.rgbShader.b);
+                        }
+                        else
+                        {
+                                spr.playAnim('confirm', true);
+                        }
                         spr.resetAnim = time;
                 }
         }

@@ -3,8 +3,11 @@ package editors;
 import Note;
 import StrumNote;
 import SustainSplash;
+import NoteSplash;
+import flixel.text.FlxText;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUINumericStepper;
+import flixel.addons.ui.FlxUICheckBox;
 using StringTools;
 
 typedef HoldCoverConfig = {
@@ -12,7 +15,10 @@ typedef HoldCoverConfig = {
     endAnim:String,
     holdFps:Int,
     endFps:Int,
-    offsets:Array<Array<Float>>
+    offsets:Array<Array<Float>>,
+    ?scale:Float,
+    ?allowRGB:Bool,
+    ?allowPixel:Bool
 }
 
 class HoldCoverDebugState extends MusicBeatState
@@ -31,12 +37,20 @@ class HoldCoverDebugState extends MusicBeatState
     var selection:FlxSprite;
     var notes:FlxTypedGroup<StrumNote>;
     var splashes:FlxTypedGroup<FlxSprite>;
+    var splashShaders:Array<NoteSplash.PixelSplashShaderRef> = [];
 
     var imageInputText:FlxInputText;
     var holdAnimInputText:FlxInputText;
     var endAnimInputText:FlxInputText;
     var stepperHoldFps:FlxUINumericStepper;
     var stepperEndFps:FlxUINumericStepper;
+    var stepperScale:FlxUINumericStepper;
+    var rgbCheckbox:FlxUICheckBox;
+    var pixelCheckbox:FlxUICheckBox;
+
+    var lastRGB:Bool = true;
+    var lastPixel:Bool = true;
+    var lastScale:Float = 1.0;
 
     var offsetsText:FlxText;
     var curFrameText:FlxText;
@@ -49,6 +63,13 @@ class HoldCoverDebugState extends MusicBeatState
     var missingText:FlxText;
 
     public static final defaultTexture:String = 'holdCover/holdCover';
+
+    var maxFrame:Int = 0;
+    var visibleTime:Float = 0;
+    var pressEnterToSave:Float = 0;
+    var textureName:String = defaultTexture;
+    var texturePath:String = '';
+    var copiedArray:Array<Float> = null;
 
     override function create()
     {
@@ -73,145 +94,114 @@ class HoldCoverDebugState extends MusicBeatState
             notes.add(note);
 
             var splash:FlxSprite = new FlxSprite(x, y);
-            splash.shader = note.rgbShader.parent.shader;
+
+            var splashShader:NoteSplash.PixelSplashShaderRef = new NoteSplash.PixelSplashShaderRef();
+            splashShader.copyValues(note.rgbShader.parent);
+            splashShader.shader.uBlocksize.value = [1, 1];
+            splashShaders.push(splashShader);
+            splash.shader = splashShader.shader;
+
             splash.antialiasing = ClientPrefs.globalAntialiasing;
             splashes.add(splash);
         }
 
-        var txtx = 60;
-        var txty = 640;
 
-        // Image Name input
-        var imageName:FlxText = new FlxText(txtx, txty - 140, 'Image Name:', 16);
-        add(imageName);
+        var startX = 50;
+        var startY = 500;
 
-        imageInputText = new FlxInputText(txtx, txty - 120, 360, defaultTexture, 16);
+        add(new FlxText(startX, startY, 0, 'Image Name:', 16));
+        imageInputText = new FlxInputText(startX, startY + 20, 360, defaultTexture, 16);
         imageInputText.callback = function(text:String, action:String)
         {
-            switch(action)
-            {
+            switch(action) {
                 case 'enter':
-                    imageInputText.hasFocus = false;
-                    textureName = text;
-                    try {
-                        loadFrames();
-                    } catch(e:Dynamic) {
-                        trace('ERROR! $e');
-                        textureName = defaultTexture;
-                        loadFrames();
-
+                    imageInputText.hasFocus = false; textureName = text;
+                    try { loadFrames(); } catch(e:Dynamic) {
+                        textureName = defaultTexture; loadFrames();
                         missingText.text = 'ERROR WHILE LOADING IMAGE:\n$text';
-                        missingText.screenCenter(Y);
-                        missingText.visible = true;
-                        missingTextBG.visible = true;
+                        missingText.screenCenter(Y); missingText.visible = true; missingTextBG.visible = true;
                         FlxG.sound.play(Paths.sound('cancelMenu'));
-
-                        new FlxTimer().start(2.5, function(tmr:FlxTimer)
-                        {
-                            missingText.visible = false;
-                            missingTextBG.visible = false;
-                        });
+                        new FlxTimer().start(2.5, function(tmr:FlxTimer) { missingText.visible = false; missingTextBG.visible = false; });
                     }
-                default:
-                    trace('changed image to $text');
             }
         };
         add(imageInputText);
 
-        // Hold Animation Prefix input
-        var holdAnimLabel:FlxText = new FlxText(txtx, txty - 20, 'Hold Anim Prefix:', 16);
-        add(holdAnimLabel);
-
-        holdAnimInputText = new FlxInputText(txtx, txty, 360, '', 16);
-        holdAnimInputText.callback = function(text:String, action:String)
-        {
-            switch(action)
-            {
-                case 'enter':
-                    holdAnimInputText.hasFocus = false;
-                default:
-                    trace('changed hold anim to $text');
-                    if(config != null) config.holdAnim = text;
-                    reloadAnims();
-            }
+        add(new FlxText(startX, startY + 60, 0, 'Hold Anim Prefix:', 16));
+        holdAnimInputText = new FlxInputText(startX, startY + 80, 250, '', 16);
+        holdAnimInputText.callback = function(text:String, action:String) {
+            if(action == 'enter') holdAnimInputText.hasFocus = false;
+            else { if(config != null) config.holdAnim = text; reloadAnims(); }
         };
         add(holdAnimInputText);
 
-        // End Animation Prefix input
-        var endAnimLabel:FlxText = new FlxText(txtx + 400, txty - 20, 'End Anim Prefix:', 16);
-        add(endAnimLabel);
-
-        endAnimInputText = new FlxInputText(txtx + 400, txty, 360, '', 16);
-        endAnimInputText.callback = function(text:String, action:String)
-        {
-            switch(action)
-            {
-                case 'enter':
-                    endAnimInputText.hasFocus = false;
-                default:
-                    trace('changed end anim to $text');
-                    if(config != null) config.endAnim = text;
-                    reloadAnims();
-            }
+        add(new FlxText(startX + 280, startY + 60, 0, 'End Anim Prefix:', 16));
+        endAnimInputText = new FlxInputText(startX + 280, startY + 80, 250, '', 16);
+        endAnimInputText.callback = function(text:String, action:String) {
+            if(action == 'enter') endAnimInputText.hasFocus = false;
+            else { if(config != null) config.endAnim = text; reloadAnims(); }
         };
         add(endAnimInputText);
 
-        // Framerate steppers
-        add(new FlxText(txtx, txty + 30, 0, 'Hold FPS / End FPS:', 16));
-        stepperHoldFps = new FlxUINumericStepper(txtx, txty + 50, 1, 24, 1, 60, 0);
+        add(new FlxText(startX, startY + 120, 0, 'Hold FPS:', 16));
+        stepperHoldFps = new FlxUINumericStepper(startX, startY + 140, 1, 24, 1, 60, 0);
         stepperHoldFps.name = 'hold_fps';
         add(stepperHoldFps);
 
-        stepperEndFps = new FlxUINumericStepper(txtx + 60, txty + 50, 1, 24, 1, 60, 0);
+        add(new FlxText(startX + 100, startY + 120, 0, 'End FPS:', 16));
+        stepperEndFps = new FlxUINumericStepper(startX + 100, startY + 140, 1, 24, 1, 60, 0);
         stepperEndFps.name = 'end_fps';
         add(stepperEndFps);
 
-        // Info text displays
+        add(new FlxText(startX + 200, startY + 120, 0, 'Scale:', 16));
+        stepperScale = new FlxUINumericStepper(startX + 200, startY + 140, 0.1, 1, 0.1, 10, 1);
+        stepperScale.name = 'scale';
+        add(stepperScale);
+
+        rgbCheckbox = new FlxUICheckBox(startX + 350, startY + 135, null, null, "Allow RGB", 120);
+        rgbCheckbox.checked = true;
+        rgbCheckbox.box.scale.set(1.4, 1.4);
+        rgbCheckbox.mark.scale.set(1.4, 1.4);
+        var rgbTxt2:FlxText = cast rgbCheckbox.button.label; rgbTxt2.size = 16; rgbTxt2.offset.y -= 2;
+        add(rgbCheckbox);
+
+        pixelCheckbox = new FlxUICheckBox(startX + 500, startY + 135, null, null, "Allow Pixel", 120);
+        pixelCheckbox.checked = true;
+        pixelCheckbox.box.scale.set(1.4, 1.4);
+        pixelCheckbox.mark.scale.set(1.4, 1.4);
+        var pixelTxt2:FlxText = cast pixelCheckbox.button.label; pixelTxt2.size = 16; pixelTxt2.offset.y -= 2;
+        add(pixelCheckbox);
+
         curModeText = new FlxText(300, 50, 680, '', 16);
         curModeText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-        curModeText.scrollFactor.set();
         add(curModeText);
 
         curAnimText = new FlxText(300, 100, 680, '', 16);
         curAnimText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-        curAnimText.scrollFactor.set();
         add(curAnimText);
 
         curFrameText = new FlxText(300, 150, 680, '', 16);
         curFrameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-        curFrameText.scrollFactor.set();
         add(curFrameText);
 
         offsetsText = new FlxText(300, 200, 680, '', 16);
         offsetsText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-        offsetsText.scrollFactor.set();
         add(offsetsText);
 
-        // Controls help text
-        var text:FlxText = new FlxText(0, 516, FlxG.width,
-            "Press SPACE to Reset animation\n
-            Press ENTER twice to save to the loaded Hold Cover PNG's folder\n
-            A/D change selected note - Arrow Keys to change offset (Hold shift for 10x)\n
-            Ctrl + C/V - Copy & Paste offsets", 16);
+        var text:FlxText = new FlxText(0, 680, FlxG.width, "SPACE: Reset | ENTERx2: Save | A/D: Change Note | Arrows: Offset | Ctrl+C/V: Copy/Paste", 16);
         text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-        text.scrollFactor.set();
         add(text);
 
         savedText = new FlxText(0, 340, FlxG.width, '', 24);
         savedText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-        savedText.scrollFactor.set();
         add(savedText);
 
         missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-        missingTextBG.alpha = 0.6;
-        missingTextBG.visible = false;
-        add(missingTextBG);
+        missingTextBG.alpha = 0.6; missingTextBG.visible = false; add(missingTextBG);
 
         missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
         missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-        missingText.scrollFactor.set();
-        missingText.visible = false;
-        add(missingText);
+        missingText.visible = false; add(missingText);
 
         loadFrames();
         changeSelection();
@@ -219,17 +209,12 @@ class HoldCoverDebugState extends MusicBeatState
         FlxG.mouse.visible = true;
     }
 
-    var maxFrame:Int = 0;
-    var visibleTime:Float = 0;
-    var pressEnterToSave:Float = 0;
-    var textureName:String = defaultTexture;
-    var texturePath:String = '';
-    var copiedArray:Array<Float> = null;
-
     override function update(elapsed:Float)
     {
         @:privateAccess
         cast(stepperHoldFps.text_field, FlxInputText).hasFocus = cast(stepperEndFps.text_field, FlxInputText).hasFocus = false;
+        @:privateAccess
+        cast(stepperScale.text_field, FlxInputText).hasFocus = false;
 
         var notTyping:Bool = !holdAnimInputText.hasFocus && !imageInputText.hasFocus && !endAnimInputText.hasFocus;
         if(controls.BACK && notTyping)
@@ -242,17 +227,33 @@ class HoldCoverDebugState extends MusicBeatState
 
         if(!notTyping) return;
 
+        var curRGB:Bool = rgbCheckbox.checked;
+        var curPixel:Bool = pixelCheckbox.checked;
+        var curScale:Float = stepperScale.value;
+        if(curRGB != lastRGB || curPixel != lastPixel || curScale != lastScale)
+        {
+            lastRGB = curRGB;
+            lastPixel = curPixel;
+            lastScale = curScale;
+            if(config != null)
+            {
+                config.allowRGB = curRGB;
+                config.allowPixel = curPixel;
+                if(curScale > 0) config.scale = curScale;
+            }
+            applyVisualSettings();
+            reapplyOffsets();
+        }
+
         if (FlxG.keys.justPressed.A) changeSelection(-1);
         else if (FlxG.keys.justPressed.D) changeSelection(1);
 
-        // Toggle between hold and end animation mode
         if (FlxG.keys.justPressed.TAB)
         {
             curAnimMode = 1 - curAnimMode;
             changeAnim();
         }
 
-        // Offset controls
         if(selecArr != null)
         {
             var movex = 0;
@@ -278,7 +279,6 @@ class HoldCoverDebugState extends MusicBeatState
             }
         }
 
-        // Copy / Paste
         if(FlxG.keys.pressed.CONTROL)
         {
             if(FlxG.keys.justPressed.C)
@@ -306,7 +306,6 @@ class HoldCoverDebugState extends MusicBeatState
                 savedText.visible = false;
         }
 
-        // Save (press ENTER twice to confirm)
         if(FlxG.keys.justPressed.ENTER)
         {
             savedText.text = 'Press ENTER again to save.';
@@ -325,13 +324,10 @@ class HoldCoverDebugState extends MusicBeatState
             savedText.visible = true;
         }
 
-        // Reset / switch animation
-        if (FlxG.keys.justPressed.SPACE)
-            changeAnim();
+        if (FlxG.keys.justPressed.SPACE) changeAnim();
         else if (FlxG.keys.justPressed.W) changeAnim(1);
         else if (FlxG.keys.justPressed.S) changeAnim(-1);
 
-        // Force frame
         var updatedFrame:Bool = false;
         if(updatedFrame = FlxG.keys.justPressed.Q) forceFrame--;
         else if(updatedFrame = FlxG.keys.justPressed.E) forceFrame++;
@@ -368,15 +364,17 @@ class HoldCoverDebugState extends MusicBeatState
         if(config == null) config = readConfigDirectly(defaultTexture);
 
         if(config == null) {
-            // Default config matching SustainSplash defaults
             var defaultOffsets:Array<Array<Float>> = [];
-            for(i in 0...8) defaultOffsets.push([110, 100]); // 4 hold + 4 end
+            for(i in 0...8) defaultOffsets.push([110, 100]);
             config = {
                 holdAnim: 'hold',
                 endAnim: 'end',
                 holdFps: 24,
                 endFps: 24,
-                offsets: defaultOffsets
+                offsets: defaultOffsets,
+                scale: 1.0,
+                allowRGB: true,
+                allowPixel: true
             };
         }
 
@@ -385,13 +383,22 @@ class HoldCoverDebugState extends MusicBeatState
         stepperHoldFps.value = config.holdFps;
         stepperEndFps.value = config.endFps;
 
+        var cfgScale:Float = (config.scale != null) ? config.scale : 1.0;
+        var cfgRGB:Bool = (config.allowRGB != null) ? config.allowRGB : true;
+        var cfgPixel:Bool = (config.allowPixel != null) ? config.allowPixel : true;
+        stepperScale.value = cfgScale;
+        rgbCheckbox.checked = cfgRGB;
+        pixelCheckbox.checked = cfgPixel;
+        lastScale = cfgScale;
+        lastRGB = cfgRGB;
+        lastPixel = cfgPixel;
+
         reloadAnims();
     }
 
     function getTxtPath(skin:String):String
     {
         #if sys
-
         var modPngPath:String = Paths.modFolders('images/$skin.png');
         if (modPngPath != null && modPngPath.length > 0 && sys.FileSystem.exists(modPngPath))
         {
@@ -426,7 +433,7 @@ class HoldCoverDebugState extends MusicBeatState
             var content:String = sys.io.File.getContent(realPath).replace('\r', '');
             var lines:Array<String> = content.split('\n');
 
-            if(lines.length < 10) return null; // Need at least 10 lines for a valid hold cover config
+            if(lines.length < 10) return null;
 
             var holdAnim:String = StringTools.trim(lines[0]);
             var endAnim:String = StringTools.trim(lines[1]);
@@ -435,27 +442,53 @@ class HoldCoverDebugState extends MusicBeatState
             var holdFps:Int = Std.parseInt(StringTools.trim(fpsArr[0]));
             var endFps:Int = Std.parseInt(StringTools.trim(fpsArr[1]));
 
-            var offsets:Array<Array<Float>> = [];
-            // Lines 3-6: hold offsets for directions 0..3
-            // Lines 7-10: end offsets for directions 0..3
+            var remaining:Array<String> = [];
             for (i in 3...lines.length)
             {
-                var animOffs:Array<String> = lines[i].split(' ');
+                var line:String = StringTools.trim(lines[i]);
+                if(line.length > 0) remaining.push(line);
+            }
+
+            var offsets:Array<Array<Float>> = [];
+            var scale:Float = 1.0;
+            var allowRGB:Bool = true;
+            var allowPixel:Bool = true;
+
+            var n:Int = remaining.length;
+            var hasExtended:Bool = (n >= 3
+                && isSingleNumber(remaining[n-3])
+                && isBoolToken(remaining[n-2])
+                && isBoolToken(remaining[n-1]));
+
+            var offsetLines:Int = hasExtended ? n - 3 : n;
+            for (i in 0...offsetLines)
+            {
+                var animOffs:Array<String> = remaining[i].split(' ');
                 if(animOffs.length >= 2) {
-                    offsets.push([
-                        Std.parseFloat(StringTools.trim(animOffs[0])),
-                        Std.parseFloat(StringTools.trim(animOffs[1]))
-                    ]);
+                    var ox:Float = Std.parseFloat(StringTools.trim(animOffs[0]));
+                    var oy:Float = Std.parseFloat(StringTools.trim(animOffs[1]));
+                    if(!Math.isNaN(ox) && !Math.isNaN(oy))
+                        offsets.push([ox, oy]);
                 }
             }
 
-            trace('Successfully loaded hold cover config: $realPath');
+            if(hasExtended)
+            {
+                var parsedScale:Float = Std.parseFloat(StringTools.trim(remaining[n-3]));
+                if(!Math.isNaN(parsedScale) && parsedScale > 0) scale = parsedScale;
+                allowRGB = parseBool(remaining[n-2]);
+                allowPixel = parseBool(remaining[n-1]);
+            }
+
             return {
                 holdAnim: holdAnim,
                 endAnim: endAnim,
                 holdFps: holdFps,
                 endFps: endFps,
-                offsets: offsets
+                offsets: offsets,
+                scale: scale,
+                allowRGB: allowRGB,
+                allowPixel: allowPixel
             };
         }
         #end
@@ -465,19 +498,22 @@ class HoldCoverDebugState extends MusicBeatState
     function saveFile()
     {
         #if sys
-        // Trim offsets to only the ones we need (max 8: 4 hold + 4 end)
         var maxLen:Int = 8;
         var curLen:Int = config.offsets.length;
-        while(curLen > maxLen)
-        {
-            config.offsets.pop();
-            curLen = config.offsets.length;
-        }
+        while(curLen > maxLen) config.offsets.pop();
+
+        var scaleVal:Float = (config.scale != null) ? config.scale : 1.0;
+        var rgbVal:String = (config.allowRGB != null && config.allowRGB) ? 'true' : 'false';
+        var pixelVal:String = (config.allowPixel != null && config.allowPixel) ? 'true' : 'false';
 
         var strToSave = config.holdAnim + '\n' + config.endAnim + '\n';
         strToSave += config.holdFps + ' ' + config.endFps;
         for (offGroup in config.offsets)
             strToSave += '\n' + offGroup[0] + ' ' + offGroup[1];
+
+        strToSave += '\n' + scaleVal;
+        strToSave += '\n' + rgbVal;
+        strToSave += '\n' + pixelVal;
 
         var path:String = getTxtPath(texturePath);
         if(path.length > 0) {
@@ -487,7 +523,7 @@ class HoldCoverDebugState extends MusicBeatState
             savedText.text = 'Error: Could not resolve save path.';
         }
         #else
-        savedText.text = 'Can\'t save on this platform, too bad.';
+        savedText.text = 'Can\'t save on this platform.';
         #end
     }
 
@@ -499,12 +535,9 @@ class HoldCoverDebugState extends MusicBeatState
             var wname = nums.name;
             switch(wname)
             {
-                case 'hold_fps':
-                    if(nums.value > stepperEndFps.value)
-                        stepperEndFps.value = nums.value;
-                case 'end_fps':
-                    if(nums.value < stepperHoldFps.value)
-                        stepperHoldFps.value = nums.value;
+                case 'hold_fps': if(nums.value > stepperEndFps.value) stepperEndFps.value = nums.value;
+                case 'end_fps': if(nums.value < stepperHoldFps.value) stepperHoldFps.value = nums.value;
+                case 'scale': if(config != null && nums.value > 0) config.scale = nums.value;
             }
             if(config != null) {
                 config.holdFps = Std.int(stepperHoldFps.value);
@@ -515,27 +548,55 @@ class HoldCoverDebugState extends MusicBeatState
 
     function reloadAnims()
     {
-        splashes.forEachAlive(function(spr:FlxSprite)
-        {
+        splashes.forEachAlive(function(spr:FlxSprite) {
             if(spr.animation != null) spr.animation.destroyAnimations();
         });
 
-        var hasHold:Bool = false;
-        var hasEnd:Bool = false;
-
-        splashes.forEachAlive(function(spr:FlxSprite)
-        {
-            // Add hold animation
+        splashes.forEachAlive(function(spr:FlxSprite) {
             spr.animation.addByPrefix('hold', config.holdAnim, config.holdFps, true);
-            hasHold = spr.animation.getByName('hold') != null;
-
-            // Add end animation
             spr.animation.addByPrefix('end', config.endAnim, config.endFps, false);
-            hasEnd = spr.animation.getByName('end') != null;
         });
 
-        trace('Hold cover anims - Has hold: $hasHold, Has end: $hasEnd');
         changeAnim();
+    }
+
+    function applyVisualSettings()
+    {
+        var useScale:Float = (stepperScale != null && stepperScale.value > 0) ? stepperScale.value : 1.0;
+        var useRGB:Bool = (rgbCheckbox != null) ? rgbCheckbox.checked : true;
+
+        for (i in 0...maxNotes)
+        {
+            var spr:FlxSprite = splashes.members[i];
+            if(spr == null) continue;
+
+            spr.scale.set(useScale, useScale);
+            spr.updateHitbox();
+
+            var shaderRef:NoteSplash.PixelSplashShaderRef = (i < splashShaders.length) ? splashShaders[i] : null;
+            if(shaderRef != null)
+            {
+                if(useRGB) {
+                    var note:StrumNote = notes.members[i];
+                    if(note != null && note.rgbShader != null && note.rgbShader.parent != null)
+                        shaderRef.copyValues(note.rgbShader.parent);
+                } else {
+                    shaderRef.copyValues(null);
+                }
+                shaderRef.shader.uBlocksize.value = [1, 1];
+            }
+        }
+    }
+
+    function reapplyOffsets()
+    {
+        for (i in 0...maxNotes)
+        {
+            var spr:FlxSprite = splashes.members[i];
+            if(spr == null) continue;
+            var offs:Array<Float> = selectedArray(i);
+            spr.offset.set(offs[0], offs[1]);
+        }
     }
 
     function changeAnim(change:Int = 0)
@@ -543,7 +604,6 @@ class HoldCoverDebugState extends MusicBeatState
         maxFrame = 0;
         forceFrame = -1;
 
-        // Toggle mode if change is provided (W = +1, S = -1)
         if(change != 0)
         {
             curAnimMode += change;
@@ -574,7 +634,12 @@ class HoldCoverDebugState extends MusicBeatState
                     if (fps <= 0) fps = 24;
                     spr.animation.curAnim.frameRate = fps;
                 }
+            }
 
+            applyVisualSettings();
+            for (i in 0...maxNotes)
+            {
+                var spr:FlxSprite = splashes.members[i];
                 var offs:Array<Float> = selectedArray(i);
                 spr.offset.set(offs[0], offs[1]);
             }
@@ -598,10 +663,6 @@ class HoldCoverDebugState extends MusicBeatState
         updateOffsetText();
     }
 
-    /**
-     *  Gets the offset array for a specific direction and current anim mode.
-     *  Index layout: [0..3] = hold offsets (dir 0-3), [4..7] = end offsets (dir 0-3)
-     */
     function selectedArray(sel:Int = -1)
     {
         if(sel < 0) sel = curSelected;
@@ -624,8 +685,23 @@ class HoldCoverDebugState extends MusicBeatState
         return min + valueMod;
     }
 
-    override function destroy()
-    {
-        super.destroy();
+    static function isBoolToken(s:String):Bool {
+        var v:String = StringTools.trim(s).toLowerCase();
+        return v == 'true' || v == 'false';
+    }
+
+    static function parseBool(s:String):Bool {
+        var v:String = StringTools.trim(s).toLowerCase();
+        return v == 'true' || v == '1';
+    }
+
+    static function isSingleNumber(s:String):Bool {
+        var v:String = StringTools.trim(s);
+        if(v.length == 0) return false;
+        if(v.indexOf(' ') >= 0) return false;
+        var lv:String = v.toLowerCase();
+        if(lv == 'true' || lv == 'false') return false;
+        var f:Float = Std.parseFloat(v);
+        return !Math.isNaN(f);
     }
 }
