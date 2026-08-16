@@ -1,7 +1,11 @@
 # Solar+ Engine
 Its a Solar Engine Fork
 
-# V0.0.2
+# V0.0.2 - HOTFIX:
+
+- Fix Hold Cover disappears and doesn't come back until the next note in Paused the game
+
+# V0.0.2:
 
 - Hold Cover Debug is now supported
 - Add new `holdCoverInputText` in Chart Editor *Default : `holdCover/holdCover`*
