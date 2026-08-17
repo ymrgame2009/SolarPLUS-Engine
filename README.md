@@ -1,6 +1,35 @@
 # Solar+ Engine
 Its a Solar Engine Fork
 
+# V0.0.4:
+
+- Hold Cover now work like Note Splash, i mean : name anim + color, or name anim only
+
+*examples:*
+
+**w/ Color**:
+
+```txt
+holdCover red0000
+holdCoverEnd red0000
+hold red0000
+end red0000
+```
+*or*
+
+**w/ out Color**:
+
+```txt
+holdCover0000
+holdCoverEnd0000
+hold0000
+end0000
+```
+
+- Fix Quant-Based 🗣🔥 doesn't work when bpm changed in mid song
+- Add Speech Bubble Dark (Dialogue) its work when Dark mode is on
+<img width="1837" height="1033" alt="image" src="https://github.com/user-attachments/assets/33f698ec-76c8-45d9-8606-9e9175c81ff3" />
+
 # V0.0.3:
 
 - Add 2 checkboxes to the Note Splash Debug & Hold Cover Debug to Allow RGB or Pixel.
