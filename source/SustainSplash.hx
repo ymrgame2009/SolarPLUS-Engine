@@ -56,7 +56,7 @@ class SustainSplash extends FlxSprite
         super.destroy();
     }
 
-    public function reloadFrames():Void
+public function reloadFrames():Void
     {
         var skin:String = (_textureLoaded != null) ? _textureLoaded : defaultNoteHoldSplash + getSplashSkinPostfix();
         frames = Paths.getSparrowAtlas(skin);
@@ -72,16 +72,38 @@ class SustainSplash extends FlxSprite
         var holdFps:Int = (config != null && config.holdFps > 0) ? config.holdFps : 24;
         var endFps:Int = (config != null && config.endFps > 0) ? config.endFps : 24;
 
-        // Always remove and re-add animations so they use the correct
-        // frame prefixes for the CURRENT spritesheet (important when
-        // recycling splashes with different skins).
-        animation.remove('hold');
-        animation.remove('end');
+        for (i in 0...Note.colArray.length) {
+            animation.remove('hold' + i);
+            animation.remove('end' + i);
+        }
 
         if (frames != null)
         {
-            animation.addByPrefix('hold', holdAnim, holdFps, true);
-            animation.addByPrefix('end', endAnim, endFps, false);
+            for (i in 0...Note.colArray.length) {
+                var col:String = Note.colArray[i];
+
+                var holdPrefixes:Array<String> = [
+                    holdAnim + ' ' + col,
+                    holdAnim
+                ];
+
+                for (prefix in holdPrefixes) {
+                    animation.addByPrefix('hold' + i, prefix, holdFps, true);
+                    if (animation.getByName('hold' + i) != null && animation.getByName('hold' + i).frames.length > 0)
+                        break;
+                }
+
+                var endPrefixes:Array<String> = [
+                    endAnim + ' ' + col,
+                    endAnim
+                ];
+
+                for (prefix in endPrefixes) {
+                    animation.addByPrefix('end' + i, prefix, endFps, false);
+                    if (animation.getByName('end' + i) != null && animation.getByName('end' + i).frames.length > 0)
+                        break;
+                }
+            }
         }
     }
 
@@ -131,7 +153,6 @@ class SustainSplash extends FlxSprite
         var holdFps:Int = Std.parseInt(StringTools.trim(fpsArr[0]));
         var endFps:Int = Std.parseInt(StringTools.trim(fpsArr[1]));
 
-        // Collect all non-empty lines after the FPS line.
         var remaining:Array<String> = [];
         for (i in 3...configFile.length)
         {
@@ -144,7 +165,6 @@ class SustainSplash extends FlxSprite
         var allowRGB:Bool = true;
         var allowPixel:Bool = true;
 
-        // Detect extended config: last 3 lines = (single number, bool, bool)
         var n:Int = remaining.length;
         var hasExtended:Bool = (n >= 3
             && isSingleNumber(remaining[n-3])
@@ -206,9 +226,12 @@ class SustainSplash extends FlxSprite
             if (endTime >= 0 && !hasEnded && Conductor.songPosition >= endTime)
             {
                 hasEnded = true;
-                if (parentNote != null && parentNote.mustPress && animation.getByName('end') != null)
+                
+                var noteDir:Int = (parentNote != null) ? parentNote.noteData : 0;
+                
+                if (parentNote != null && parentNote.mustPress && animation.getByName('end' + noteDir) != null)
                 {
-                    animation.play('end', true, false, 0);
+                    animation.play('end' + noteDir, true, false, 0);
                     if (animation.curAnim != null)
                     {
                         animation.curAnim.looped = false;
@@ -264,7 +287,6 @@ class SustainSplash extends FlxSprite
         var config:HoldCoverConfig = precacheConfig(_configLoaded);
         var holdFps:Int = (config != null && config.holdFps > 0) ? config.holdFps : 24;
 
-        // Old working default offset
         var defaultOffX:Float = PlayState.isPixelStage ? 112.5 : 110;
         var defaultOffY:Float = 100;
         var noteDir:Int = daNote.noteData;
@@ -277,9 +299,9 @@ class SustainSplash extends FlxSprite
                 offArr = config.offsets[offIdx];
         }
 
-        if (animation.getByName('hold') != null)
+        if (animation.getByName('hold' + noteDir) != null)
         {
-            animation.play('hold', true, false, 0);
+            animation.play('hold' + noteDir, true, false, 0);
             if (animation.curAnim != null)
             {
                 animation.curAnim.frameRate = holdFps;
@@ -287,7 +309,6 @@ class SustainSplash extends FlxSprite
             }
         }
 
-        // Read allowRGB / allowPixel / scale from config
         var allowRGB:Bool = true;
         var allowPixel:Bool = true;
         var useScale:Float = 1.0;
@@ -298,15 +319,14 @@ class SustainSplash extends FlxSprite
             if(config.scale != null && config.scale > 0) useScale = config.scale;
         }
 
-        // Apply RGB shader
-        if (allowRGB && ClientPrefs.enableColorShader && rgbShader != null)
+        var pixel:Float = 1;
+        if (PlayState.isPixelStage && allowPixel) pixel = PlayState.daPixelZoom;
+
+        if ((allowRGB || pixel > 1) && ClientPrefs.enableColorShader && rgbShader != null)
             shader = rgbShader.shader;
         else
             shader = null;
 
-        // Apply pixel blocksize
-        var pixel:Float = 1;
-        if (PlayState.isPixelStage && allowPixel) pixel = PlayState.daPixelZoom;
         if (rgbShader != null && rgbShader.shader != null)
             rgbShader.shader.uBlocksize.value = [pixel, pixel];
 
@@ -327,17 +347,16 @@ class SustainSplash extends FlxSprite
                     tempShader = Note.globalRgbShaders[daNote.noteData];
                 }
             }
+            
             if (tempShader != null)
                 rgbShader.copyValues(tempShader);
+            else
+                rgbShader.copyValues(null);
         }
 
-        // Apply scale FIRST, then clipRect (uses frameWidth/frameHeight), then offset
         scale.set(useScale, useScale);
         updateHitbox();
 
-        // ClipRect: only apply the -210 pixel-stage clip for the DEFAULT skin.
-        // Custom hold covers may have different frame sizes/layouts, so clipping
-        // them would hide the entire hold animation.
         var isDefaultSkin:Bool = (_textureLoaded == null
             || _textureLoaded == defaultNoteHoldSplash
             || _textureLoaded == defaultNoteHoldSplash + getSplashSkinPostfix());
@@ -354,8 +373,6 @@ class SustainSplash extends FlxSprite
     {
         return '';
     }
-
-    // ----- Helpers for extended config parsing -----
 
     static function isBoolToken(s:String):Bool
     {

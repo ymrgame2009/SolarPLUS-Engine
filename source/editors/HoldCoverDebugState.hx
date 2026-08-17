@@ -105,7 +105,6 @@ class HoldCoverDebugState extends MusicBeatState
             splashes.add(splash);
         }
 
-
         var startX = 50;
         var startY = 500;
 
@@ -546,16 +545,41 @@ class HoldCoverDebugState extends MusicBeatState
         }
     }
 
-    function reloadAnims()
+function reloadAnims()
     {
         splashes.forEachAlive(function(spr:FlxSprite) {
             if(spr.animation != null) spr.animation.destroyAnimations();
         });
 
-        splashes.forEachAlive(function(spr:FlxSprite) {
-            spr.animation.addByPrefix('hold', config.holdAnim, config.holdFps, true);
-            spr.animation.addByPrefix('end', config.endAnim, config.endFps, false);
-        });
+        for (i in 0...maxNotes)
+        {
+            var spr:FlxSprite = splashes.members[i];
+            if(spr == null) continue;
+
+            var col:String = colArray[i];
+
+            var holdPrefixes:Array<String> = [
+                config.holdAnim + ' ' + col,
+                config.holdAnim
+            ];
+
+            for (prefix in holdPrefixes) {
+                spr.animation.addByPrefix('hold', prefix, config.holdFps, true);
+                if (spr.animation.getByName('hold') != null && spr.animation.getByName('hold').frames.length > 0)
+                    break;
+            }
+
+            var endPrefixes:Array<String> = [
+                config.endAnim + ' ' + col,
+                config.endAnim
+            ];
+
+            for (prefix in endPrefixes) {
+                spr.animation.addByPrefix('end', prefix, config.endFps, false);
+                if (spr.animation.getByName('end') != null && spr.animation.getByName('end').frames.length > 0)
+                    break;
+            }
+        }
 
         changeAnim();
     }

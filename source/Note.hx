@@ -371,51 +371,123 @@ class Note extends FlxSkewedSprite
                 }
         }
 
-        public function checkNoteQuantColor()
+    public function checkNoteQuantColor()
+    {
+        if (rgbShader == null) return;
+
+        var timeToCheck:Float = strumTime;
+        if (isSustainNote)
         {
-                if (rgbShader == null) return;
+            if (parent != null)
+                timeToCheck = parent.strumTime;
+            else if (prevNote != null)
+            {
+                var p:Note = prevNote;
+                while (p != null && p.isSustainNote)
+                    p = p.prevNote;
+                if (p != null)
+                    timeToCheck = p.strumTime;
+            }
+        }
 
-                var timeToCheck:Float = strumTime;
-                if (isSustainNote)
+        var sectionInfo:Dynamic = getSectionInfoAtTime(timeToCheck);
+        var bpmAtTime:Float = sectionInfo.bpm;
+        var sectionStart:Float = sectionInfo.startTime;
+        var relativeTime:Float = timeToCheck - sectionStart;
+
+        var stepTime:Float = 15000 / bpmAtTime;
+        if (stepTime <= 0) stepTime = 150;
+
+        var quantIndex:Int = 0;
+        for (i in 0...quantDivisors.length)
+        {
+            var divisor:Int = quantDivisors[i];
+            var quantTime:Float = stepTime * 4 / divisor;
+            var nearest:Float = Math.round(relativeTime / quantTime) * quantTime;
+            if (Math.abs(relativeTime - nearest) < 2.0)
+            {
+                quantIndex = i;
+                break;
+            }
+        }
+
+        if (ClientPrefs.quantRGB != null && quantIndex < ClientPrefs.quantRGB.length)
+        {
+            var arr:Array<FlxColor> = ClientPrefs.quantRGB[quantIndex];
+            if (arr != null && arr.length >= 3)
+            {
+                rgbShader.r = arr[0];
+                rgbShader.g = arr[1];
+                rgbShader.b = arr[2];
+            }
+        }
+    }
+
+    private static function getSectionInfoAtTime(time:Float):Dynamic
+    {
+        var result:Dynamic = {bpm: Conductor.bpm, startTime: 0.0};
+
+        if (PlayState.SONG == null || PlayState.SONG.notes == null)
+            return result;
+
+        var bpm:Float = PlayState.SONG.bpm;
+        var cumulativeTime:Float = 0;
+
+        for (i in 0...PlayState.SONG.notes.length)
+        {
+            var section:Dynamic = PlayState.SONG.notes[i];
+            if (section.changeBPM)
+                bpm = section.bpm;
+
+            var stepsInSection:Int = 16;
+            if (Reflect.hasField(section, 'lengthInSteps') && section.lengthInSteps != null)
+                stepsInSection = Std.int(section.lengthInSteps);
+
+            var sectionDuration:Float = stepsInSection * (15000 / bpm);
+
+            if (time < cumulativeTime + sectionDuration)
+            {
+                result.bpm = bpm;
+                result.startTime = cumulativeTime;
+                return result;
+            }
+
+            cumulativeTime += sectionDuration;
+        }
+
+        result.bpm = bpm;
+        result.startTime = cumulativeTime;
+        return result;
+    }
+
+
+
+        private static function getBPMAtTime(time:Float):Float
+        {
+                if (PlayState.SONG == null || PlayState.SONG.notes == null)
+                return Conductor.bpm;
+
+                var bpm:Float = PlayState.SONG.bpm;
+                var cumulativeTime:Float = 0;
+
+                for (i in 0...PlayState.SONG.notes.length)
                 {
-                        if (parent != null)
-                                timeToCheck = parent.strumTime;
-                        else if (prevNote != null)
-                        {
-                                var p:Note = prevNote;
-                                while (p != null && p.isSustainNote)
-                                        p = p.prevNote;
-                                if (p != null)
-                                        timeToCheck = p.strumTime;
-                        }
+                        var section:Dynamic = PlayState.SONG.notes[i];
+                        if (section.changeBPM)
+                            bpm = section.bpm;
+
+                        var stepsInSection:Int = 16;
+                        if (Reflect.hasField(section, 'lengthInSteps') && section.lengthInSteps != null)
+                            stepsInSection = Std.int(section.lengthInSteps);
+
+                        var sectionDuration:Float = stepsInSection * (15000 / bpm);
+                        cumulativeTime += sectionDuration;
+
+                        if (time < cumulativeTime)
+                            return bpm;
                 }
 
-                var stepTime:Float = Conductor.stepCrochet;
-                if (stepTime <= 0) stepTime = 150;
-
-                var quantIndex:Int = 0;
-                for (i in 0...quantDivisors.length)
-                {
-                        var divisor:Int = quantDivisors[i];
-                        var quantTime:Float = stepTime * 4 / divisor;
-                        var nearest:Float = Math.round(timeToCheck / quantTime) * quantTime;
-                        if (Math.abs(timeToCheck - nearest) < 2.0)
-                        {
-                                quantIndex = i;
-                                break;
-                        }
-                }
-
-                if (ClientPrefs.quantRGB != null && quantIndex < ClientPrefs.quantRGB.length)
-                {
-                        var arr:Array<FlxColor> = ClientPrefs.quantRGB[quantIndex];
-                        if (arr != null && arr.length >= 3)
-                        {
-                                rgbShader.r = arr[0];
-                                rgbShader.g = arr[1];
-                                rgbShader.b = arr[2];
-                        }
-                }
+                return bpm;
         }
 
         public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false)
